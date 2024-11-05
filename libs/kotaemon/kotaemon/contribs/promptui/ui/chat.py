@@ -96,7 +96,7 @@ def construct_chat_ui(
     )
     param_state = gr.Textbox(interactive=False)
 
-    with gr.Blocks(analytics_enabled=False, title="Welcome to PromptUI") as demo:
+    with gr.Blocks(analytics_enabled=False, title="Welcome to PP2 LLM") as demo:
         sess.render()
         with gr.Accordion(label="HOW TO", open=False):
             gr.Markdown(USAGE_INSTRUCTION)

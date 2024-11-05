@@ -82,7 +82,7 @@ def construct_pipeline_ui(
     history_dataframe = gr.DataFrame(wrap=True)
 
     temp = gr.Tab
-    with gr.Blocks(analytics_enabled=False, title="Welcome to PromptUI") as demo:
+    with gr.Blocks(analytics_enabled=False, title="Welcome to PP2 LLM") as demo:
         with gr.Accordion(label="HOW TO", open=False):
             gr.Markdown(USAGE_INSTRUCTION)
         with gr.Accordion(label="Params History", open=False):
