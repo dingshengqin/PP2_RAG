@@ -58,7 +58,7 @@ class App(BaseApp):
                 id="chatbot-tab",
                 visible=not self.f_user_management,
             ) as self._tabs["chatbot-tab"]:
-                self.chat_page = ChatbotPage(self)
+                self.chatbot_page = ChatbotPage(self)
 
             with gr.Tab(
                 "Chat",
