@@ -81,16 +81,39 @@ button.selected {
   flex: auto;
 }
 
+#user-chat-bot {
+  background: var(--background-fill-primary);
+  flex: auto;
+}
+
 #chat-area {
   height: var(--main-area-height) !important;
 }
+
+
+#user-chat-area {
+  height: var(--main-area-height) !important;
+}
+
 
 #chat-info-panel {
   max-height: var(--main-area-height) !important;
   overflow: auto !important;
 }
 
+#user-chat-info-panel {
+  max-height: var(--main-area-height) !important;
+  overflow: auto !important;
+}
+
 #conv-settings-panel {
+  max-height: var(--main-area-height) !important;
+  flex-wrap: unset;
+  overflow-y: scroll !important;
+  position: sticky;
+}
+
+#user-conv-settings-panel {
   max-height: var(--main-area-height) !important;
   flex-wrap: unset;
   overflow-y: scroll !important;

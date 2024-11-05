@@ -2,6 +2,7 @@ import gradio as gr
 from decouple import config
 from ktem.app import BaseApp
 from ktem.pages.chat import ChatPage
+from ktem.pages.chatbot import ChatbotPage
 from ktem.pages.help import HelpPage
 from ktem.pages.resources import ResourcesTab
 from ktem.pages.settings import SettingsPage
@@ -50,6 +51,14 @@ class App(BaseApp):
                     "Welcome", elem_id="login-tab", id="login-tab"
                 ) as self._tabs["login-tab"]:
                     self.login_page = LoginPage(self)
+
+            with gr.Tab(
+                "Chatbot",
+                elem_id="chatbot-tab",
+                id="chatbot-tab",
+                visible=not self.f_user_management,
+            ) as self._tabs["chatbot-tab"]:
+                self.chat_page = ChatbotPage(self)
 
             with gr.Tab(
                 "Chat",
