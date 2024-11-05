@@ -36,10 +36,11 @@ class BaseApp:
 
     def __init__(self):
         self.dev_mode = getattr(settings, "KH_MODE", "") == "dev"
-        self.app_name = getattr(settings, "KH_APP_NAME", "Kotaemon")
+        self.app_name = getattr(settings, "KH_APP_NAME", "PP2 LLM")
         self.app_version = getattr(settings, "KH_APP_VERSION", "")
         self.f_user_management = getattr(settings, "KH_FEATURE_USER_MANAGEMENT", False)
         self._theme = KotaemonTheme()
+        self._theme = None
 
         dir_assets = Path(__file__).parent / "assets"
         with (dir_assets / "css" / "main.css").open() as fi:
@@ -178,10 +179,13 @@ class BaseApp:
             f"{self._svg_js}"
             "</script>"
         )
+        additional_css = ".gradio-container {background-color: #002733;}"
+        combined_css = f"{self._css}\n{additional_css}"
 
         with gr.Blocks(
             theme=self._theme,
-            css=self._css,
+            # css=self._css,
+            css=combined_css,
             title=self.app_name,
             analytics_enabled=False,
             js=self._js,

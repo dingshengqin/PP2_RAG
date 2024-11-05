@@ -2,7 +2,7 @@ import gradio as gr
 from ktem.app import BasePage
 
 
-class ChatPanel(BasePage):
+class UserChatPanel(BasePage):
     def __init__(self, app):
         self._app = app
         self.on_building_ui()
@@ -15,7 +15,7 @@ class ChatPanel(BasePage):
                 "contact bin.jiang@volkswagen-anhui.com."
             ),
             show_label=False,
-            elem_id="main-chat-bot",
+            elem_id="user-chat-bot",
             show_copy_button=True,
             likeable=True,
             bubble_full_width=False,
