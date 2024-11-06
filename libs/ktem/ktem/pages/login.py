@@ -31,10 +31,12 @@ class LoginPage(BasePage):
         self.on_building_ui()
 
     def on_building_ui(self):
-        gr.Markdown(f"# Welcome to {self._app.app_name}!")
-        self.usn = gr.Textbox(label="Username", visible=False)
-        self.pwd = gr.Textbox(label="Password", type="password", visible=False)
-        self.btn_login = gr.Button("Login", visible=False)
+        # gr.Markdown(f"# Welcome to {self._app.app_name}!")
+        # gr.Markdown(f"<span style='color: black;'># Welcome to {self._app.app_name}!</span>",)
+        gr.Markdown(f"<h1 style='color: black;'>Welcome to {self._app.app_name}</h1>")
+        self.usn = gr.Textbox(label="Username", visible=True)
+        self.pwd = gr.Textbox(label="Password", type="password", visible=True)
+        self.btn_login = gr.Button("Login", visible=True)
 
     def on_register_events(self):
         onSignIn = gr.on(
@@ -53,10 +55,11 @@ class LoginPage(BasePage):
             onSignIn = onSignIn.success(**event)
 
     def toggle_login_visibility(self, user_id):
+        
         return (
-            gr.update(visible=user_id is None),
-            gr.update(visible=user_id is None),
-            gr.update(visible=user_id is None),
+            gr.update(visible=True),
+            gr.update(visible=True),
+            gr.update(visible=True),
         )
 
     def _on_app_created(self):
