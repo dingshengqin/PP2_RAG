@@ -60,7 +60,13 @@ button.selected {
 }
 
 
-#chatbot-tab,
+#chatbot-tab{
+  background: var(--background-fill-primary);
+  /* flex: auto; */
+  height: 1000;  /* 自适应屏幕高度的70% */
+  overflow-y: auto;  /* 允许垂直滚动 */
+}
+
 
 #indices-tab,
 #settings-tab,
