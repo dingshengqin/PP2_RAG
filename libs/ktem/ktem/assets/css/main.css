@@ -120,6 +120,14 @@ button.selected {
   position: sticky;
 }
 
+
+#Collection setting{
+  max-height: var(--main-area-height) !important;
+  flex-wrap: unset;
+  overflow-y: scroll !important;
+  position: sticky;
+}
+
 .setting-answer-mode-description {
   margin: 5px 5px 2px !important;
 }

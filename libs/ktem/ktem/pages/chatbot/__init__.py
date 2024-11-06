@@ -81,94 +81,299 @@ class ChatbotPage(BasePage):
         self._suggestion_updated = gr.State(value=False)
         self._info_panel_expanded = gr.State(value=True)
 
+    # def on_building_ui(self):
+    #     with gr.Row():
+    #         self.state_chat = gr.State(STATE)
+    #         self.state_retrieval_history = gr.State([])
+    #         self.state_plot_history = gr.State([])
+    #         self.state_plot_panel = gr.State(None)
+    #         self.state_follow_up = gr.State(None)
+
+    #         with gr.Column(scale=1, elem_id="user-conv-settings-panel") as self.conv_column:
+    #             self.chat_control = UserConversationControl(self._app)
+
+    #             for index_id, index in enumerate(self._app.index_manager.indices):
+    #                 index.selector = None
+    #                 index_ui = index.get_selector_component_ui()
+    #                 if not index_ui:
+    #                     # the index doesn't have a selector UI component
+    #                     continue
+
+    #                 index_ui.unrender()  # need to rerender later within Accordion
+    #                 with gr.Accordion(
+    #                     label=f"{index.name} Collection", open=index_id < 1
+    #                 ):
+    #                     index_ui.render()
+    #                     gr_index = index_ui.as_gradio_component()
+    #                     if gr_index:
+    #                         if isinstance(gr_index, list):
+    #                             index.selector = tuple(
+    #                                 range(
+    #                                     len(self._indices_input),
+    #                                     len(self._indices_input) + len(gr_index),
+    #                                 )
+    #                             )
+    #                             index.default_selector = index_ui.default()
+    #                             self._indices_input.extend(gr_index)
+    #                         else:
+    #                             index.selector = len(self._indices_input)
+    #                             index.default_selector = index_ui.default()
+    #                             self._indices_input.append(gr_index)
+    #                     setattr(self, f"_index_{index.id}", index_ui)
+
+    #             if len(self._app.index_manager.indices) > 0:
+    #                 with gr.Accordion(label="Quick Upload") as _:
+    #                     self.quick_file_upload = File(
+    #                         file_types=list(KH_DEFAULT_FILE_EXTRACTORS.keys()),
+    #                         file_count="multiple",
+    #                         container=True,
+    #                         show_label=False,
+    #                     )
+    #                     self.quick_file_upload_status = gr.Markdown()
+
+    #             self.report_issue = UserReportIssue(self._app)
+
+    #         with gr.Column(scale=6, elem_id="user-chat-area"):
+    #             self.chat_panel = UserChatPanel(self._app)
+
+    #             with gr.Row():
+    #                 with gr.Accordion(label="Chat settings", open=False):
+    #                     # a quick switch for reasoning type option
+    #                     with gr.Row():
+    #                         gr.HTML("Reasoning method")
+    #                         gr.HTML("Model")
+
+    #                     with gr.Row():
+    #                         reasoning_type_values = [
+    #                             (DEFAULT_SETTING, DEFAULT_SETTING)
+    #                         ] + self._app.default_settings.reasoning.settings[
+    #                             "use"
+    #                         ].choices
+    #                         self.reasoning_types = gr.Dropdown(
+    #                             choices=reasoning_type_values,
+    #                             value=DEFAULT_SETTING,
+    #                             container=False,
+    #                             show_label=False,
+    #                         )
+    #                         self.model_types = gr.Dropdown(
+    #                             choices=self._app.default_settings.reasoning.options[
+    #                                 "simple"
+    #                             ]
+    #                             .settings["llm"]
+    #                             .choices,
+    #                             value="",
+    #                             container=False,
+    #                             show_label=False,
+    #                         )
+            
+
+    #         with gr.Column(
+    #             scale=INFO_PANEL_SCALES[False], elem_id="user-chat-info-panel"
+    #         ) as self.info_column:
+    #             with gr.Accordion(label="Information panel", open=True):
+    #                 self.modal = gr.HTML("<div id='pdf-modal'></div>")
+    #                 self.plot_panel = gr.Plot(visible=False)
+    #                 self.info_panel = gr.HTML(elem_id="html-info-panel")
+
+
     def on_building_ui(self):
+
+        with gr.Row():
+            self.state_settings = gr.State({})
+            with gr.Column(scale=3,elem_id="user-conv-settings-panel") as self.conv_Column:
+                self.chat_control = UserConversationControl(self._app)
+
+                # if getattr(flowsettings, "KH_FEATURE_CHAT_SUGGESTION", False):
+                #     self.chat_suggestion = ChatbotSuggestion(self._app)
+
+            # with gr.Column(scale=4,elem_id="Collection setting ") as self.conv_Column:
+            
+            #     for index_id, index in enumerate(self._app.index_manager.indices):
+            #         index.selector = None
+            #         index_ui = index.get_selector_component_ui()
+            #         if not index_ui:
+            #             # the index doesn't have a selector UI component
+            #             continue
+
+            #         index_ui.unrender()  # need to rerender later within Accordion
+            #         with gr.Accordion(
+            #             label=f"{index.name} Collection" + (" - not available now" if index.name == "GraphRAG" else ""),
+            #             open=index_id < 1
+            #         ):
+            #             index_ui.render()
+            #             gr_index = index_ui.as_gradio_component()
+            #             if gr_index:
+            #                 if isinstance(gr_index, list):
+            #                     index.selector = tuple(
+            #                         range(
+            #                             len(self._indices_input),
+            #                             len(self._indices_input) + len(gr_index),
+            #                         )
+            #                     )
+            #                     index.default_selector = index_ui.default()
+            #                     self._indices_input.extend(gr_index)
+            #                 else:
+            #                     index.selector = len(self._indices_input)
+            #                     index.default_selector = index_ui.default()
+            #                     self._indices_input.append(gr_index)
+            #             setattr(self, f"_index_{index.id}", index_ui)
+
+            
+            for index_id, index in enumerate(self._app.index_manager.indices):
+                index.selector = None
+                index_ui = index.get_selector_component_ui()
+                if not index_ui:
+                    # the index doesn't have a selector UI component
+                    continue
+
+                index_ui.unrender()  # need to rerender later within Accordion
+
+                if index.name == "File":
+                    with gr.Column(scale=3,elem_id="Collection setting ") as self.conv_Column:
+
+                        with gr.Accordion(
+                            label=f"{index.name} Collection" ,
+                            open= False
+                        ):
+                            index_ui.render()
+                            gr_index = index_ui.as_gradio_component()
+                            if gr_index:
+                                if isinstance(gr_index, list):
+                                    index.selector = tuple(
+                                        range(
+                                            len(self._indices_input),
+                                            len(self._indices_input) + len(gr_index),
+                                        )
+                                    )
+                                    index.default_selector = index_ui.default()
+                                    self._indices_input.extend(gr_index)
+                                else:
+                                    index.selector = len(self._indices_input)
+                                    index.default_selector = index_ui.default()
+                                    self._indices_input.append(gr_index)
+                            setattr(self, f"_index_{index.id}", index_ui)
+
+                if index.name == "GraphRAG":
+                    with gr.Column(scale=3,elem_id="Collection setting ") as self.conv_Column:
+
+                        with gr.Accordion(
+                            label=f"{index.name} Collection" + (" - not available now" if index.name == "GraphRAG" else ""),
+                            open=index_id < 1
+                        ):
+                            index_ui.render()
+                            gr_index = index_ui.as_gradio_component()
+                            if gr_index:
+                                if isinstance(gr_index, list):
+                                    index.selector = tuple(
+                                        range(
+                                            len(self._indices_input),
+                                            len(self._indices_input) + len(gr_index),
+                                        )
+                                    )
+                                    index.default_selector = index_ui.default()
+                                    self._indices_input.extend(gr_index)
+                                else:
+                                    index.selector = len(self._indices_input)
+                                    index.default_selector = index_ui.default()
+                                    self._indices_input.append(gr_index)
+                            setattr(self, f"_index_{index.id}", index_ui)
+            with gr.Column(scale=3,):
+                with gr.Accordion(label="Chat settings", open=False):
+                    # a quick switch for reasoning type option
+                    with gr.Row():
+                        gr.HTML("Reasoning method")
+                        gr.HTML("Model")
+
+                    with gr.Row():
+                        reasoning_type_values = [
+                            (DEFAULT_SETTING, DEFAULT_SETTING)
+                        ] + self._app.default_settings.reasoning.settings[
+                            "use"
+                        ].choices
+                        self.reasoning_types = gr.Dropdown(
+                            choices=reasoning_type_values,
+                            value=DEFAULT_SETTING,
+                            container=False,
+                            show_label=False,
+                        )
+                        self.model_types = gr.Dropdown(
+                            choices=self._app.default_settings.reasoning.options[
+                                "simple"
+                            ]
+                            .settings["llm"]
+                            .choices,
+                            value="",
+                            container=False,
+                            show_label=False,
+                        )
+
+
         with gr.Row():
             self.state_chat = gr.State(STATE)
             self.state_retrieval_history = gr.State([])
+            self.state_chat_history = gr.State([])
             self.state_plot_history = gr.State([])
+            # self.state_settings = gr.State({})
+            self.state_info_panel = gr.State("")
             self.state_plot_panel = gr.State(None)
-            self.state_follow_up = gr.State(None)
 
-            with gr.Column(scale=1, elem_id="user-conv-settings-panel") as self.conv_column:
-                self.chat_control = UserConversationControl(self._app)
-
-                for index_id, index in enumerate(self._app.index_manager.indices):
-                    index.selector = None
-                    index_ui = index.get_selector_component_ui()
-                    if not index_ui:
-                        # the index doesn't have a selector UI component
-                        continue
-
-                    index_ui.unrender()  # need to rerender later within Accordion
-                    with gr.Accordion(
-                        label=f"{index.name} Collection", open=index_id < 1
-                    ):
-                        index_ui.render()
-                        gr_index = index_ui.as_gradio_component()
-                        if gr_index:
-                            if isinstance(gr_index, list):
-                                index.selector = tuple(
-                                    range(
-                                        len(self._indices_input),
-                                        len(self._indices_input) + len(gr_index),
-                                    )
-                                )
-                                index.default_selector = index_ui.default()
-                                self._indices_input.extend(gr_index)
-                            else:
-                                index.selector = len(self._indices_input)
-                                index.default_selector = index_ui.default()
-                                self._indices_input.append(gr_index)
-                        setattr(self, f"_index_{index.id}", index_ui)
-
-                if len(self._app.index_manager.indices) > 0:
-                    with gr.Accordion(label="Quick Upload") as _:
-                        self.quick_file_upload = File(
-                            file_types=list(KH_DEFAULT_FILE_EXTRACTORS.keys()),
-                            file_count="multiple",
-                            container=True,
-                            show_label=False,
-                        )
-                        self.quick_file_upload_status = gr.Markdown()
-
-                self.report_issue = UserReportIssue(self._app)
-
-            with gr.Column(scale=6, elem_id="user-chat-area"):
-                self.chat_panel = UserChatPanel(self._app)
-
-                with gr.Row():
-                    with gr.Accordion(label="Chat settings", open=False):
-                        # a quick switch for reasoning type option
-                        with gr.Row():
-                            gr.HTML("Reasoning method")
-                            gr.HTML("Model")
-
-                        with gr.Row():
-                            reasoning_type_values = [
-                                (DEFAULT_SETTING, DEFAULT_SETTING)
-                            ] + self._app.default_settings.reasoning.settings[
-                                "use"
-                            ].choices
-                            self.reasoning_types = gr.Dropdown(
-                                choices=reasoning_type_values,
-                                value=DEFAULT_SETTING,
-                                container=False,
-                                show_label=False,
-                            )
-                            self.model_types = gr.Dropdown(
-                                choices=self._app.default_settings.reasoning.options[
-                                    "simple"
-                                ]
-                                .settings["llm"]
-                                .choices,
-                                value="",
-                                container=False,
-                                show_label=False,
-                            )
             
 
+            # if len(self._app.index_manager.indices) > 0:
+            #     with gr.Accordion(label="Quick Upload") as _:
+            #         self.quick_file_upload = File(
+            #             file_types=list(KH_DEFAULT_FILE_EXTRACTORS.keys()),
+            #             file_count="multiple",
+            #             container=True,
+            #             show_label=False,
+            #         )
+            #         self.quick_file_upload_status = gr.Markdown()
+
+            # self.report_issue = UserReportIssue(self._app)
+
+                # 添加图片显示组件
+                # with gr.Row(): 
+                #     # 添加图片
+                #     image_path_new = "https://i.ibb.co/NpjJ9hT/logo-new.png"  
+                #     # 直接创建图片组件，不调用 render()
+                #     self.image_component = gr.Image(value=image_path_new, elem_id="custom-image2",show_label=False,show_download_button=False)
+                
+
+            with gr.Column(scale=7, elem_id="chatbot-area"):
+                self.chat_panel = UserChatPanel(self._app)
+
+                # with gr.Row():
+                #     with gr.Accordion(label="Chat settings", open=False):
+                #         # a quick switch for reasoning type option
+                #         with gr.Row():
+                #             gr.HTML("Reasoning method")
+                #             gr.HTML("Model")
+
+                #         with gr.Row():
+                #             reasoning_type_values = [
+                #                 (DEFAULT_SETTING, DEFAULT_SETTING)
+                #             ] + self._app.default_settings.reasoning.settings[
+                #                 "use"
+                #             ].choices
+                #             self.reasoning_types = gr.Dropdown(
+                #                 choices=reasoning_type_values,
+                #                 value=DEFAULT_SETTING,
+                #                 container=False,
+                #                 show_label=False,
+                #             )
+                #             self.model_types = gr.Dropdown(
+                #                 choices=self._app.default_settings.reasoning.options[
+                #                     "simple"
+                #                 ]
+                #                 .settings["llm"]
+                #                 .choices,
+                #                 value="",
+                #                 container=False,
+                #                 show_label=False,
+                #             )
+
             with gr.Column(
-                scale=INFO_PANEL_SCALES[False], elem_id="user-chat-info-panel"
+                scale=7, elem_id="chatbot-info-panel"
             ) as self.info_column:
                 with gr.Accordion(label="Information panel", open=True):
                     self.modal = gr.HTML("<div id='pdf-modal'></div>")
@@ -472,22 +677,22 @@ class ChatbotPage(BasePage):
             show_progress="hidden",
         )
 
-        self.report_issue.report_btn.click(
-            self.report_issue.report,
-            inputs=[
-                self.report_issue.correctness,
-                self.report_issue.issues,
-                self.report_issue.more_detail,
-                self.chat_control.conversation_id,
-                self.chat_panel.chatbot,
-                self._app.settings_state,
-                self._app.user_id,
-                self.info_panel,
-                self.state_chat,
-            ]
-            + self._indices_input,
-            outputs=None,
-        )
+        # self.report_issue.report_btn.click(
+        #     self.report_issue.report,
+        #     inputs=[
+        #         self.report_issue.correctness,
+        #         self.report_issue.issues,
+        #         self.report_issue.more_detail,
+        #         self.chat_control.conversation_id,
+        #         self.chat_panel.chatbot,
+        #         self._app.settings_state,
+        #         self._app.user_id,
+        #         self.info_panel,
+        #         self.state_chat,
+        #     ]
+        #     + self._indices_input,
+        #     outputs=None,
+        # )
         self.reasoning_types.change(
             self.reasoning_changed,
             inputs=[self.reasoning_types],
