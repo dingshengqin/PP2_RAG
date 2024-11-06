@@ -52,7 +52,16 @@ button.selected {
   font-weight: bold;
 }
 
-#chat-tab,
+#chat-tab {
+  background: var(--background-fill-primary);
+  /* flex: auto; */
+  height: 700;  /* 自适应屏幕高度的70% */
+  overflow-y: auto;  /* 允许垂直滚动 */
+}
+
+
+#chatbot-tab,
+
 #indices-tab,
 #settings-tab,
 #help-tab,
@@ -81,10 +90,14 @@ button.selected {
   flex: auto;
 }
 
+
 #user-chat-bot {
   background: var(--background-fill-primary);
   flex: auto;
 }
+
+
+
 
 #chat-area {
   height: var(--main-area-height) !important;
