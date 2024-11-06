@@ -278,7 +278,7 @@ class ChatbotPage(BasePage):
                                     self._indices_input.append(gr_index)
                             setattr(self, f"_index_{index.id}", index_ui)
             with gr.Column(scale=3,):
-                with gr.Accordion(label="Chat settings", open=False):
+                with gr.Accordion(label="Chat settings(only ollama available now)", open=False):
                     # a quick switch for reasoning type option
                     with gr.Row():
                         gr.HTML("Reasoning method")

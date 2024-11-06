@@ -21,4 +21,6 @@ demo.queue().launch(
         "libs/ktem/ktem/assets",
         GRADIO_TEMP_DIR,
     ],
+    server_name="0.0.0.0",  # 指定服务器地址
+    server_port=7860        # 可以指定端口，默认是7860
 )
