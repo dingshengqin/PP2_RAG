@@ -44,13 +44,13 @@ class App(BaseApp):
         self._tabs = {}
 
         with gr.Tabs() as self.tabs:
-            if self.f_user_management:
-                from ktem.pages.login import LoginPage
+            # if self.f_user_management:
+            from ktem.pages.login import LoginPage
 
-                with gr.Tab(
-                    "Welcome", elem_id="login-tab", id="login-tab"
-                ) as self._tabs["login-tab"]:
-                    self.login_page = LoginPage(self)
+            with gr.Tab(
+                "Welcome", elem_id="login-tab", id="login-tab"
+            ) as self._tabs["login-tab"]:
+                self.login_page = LoginPage(self)
 
             with gr.Tab(
                 "Chatbot",
@@ -164,7 +164,7 @@ class App(BaseApp):
                 tabs_update = []
                 for k in self._tabs.keys():
                     if k == "login-tab":
-                        tabs_update.append(gr.update(visible=False))
+                        tabs_update.append(gr.update(visible=True))
                     elif k == "resources-tab":
                         tabs_update.append(gr.update(visible=is_admin))
                     elif k == "chat-tab":
