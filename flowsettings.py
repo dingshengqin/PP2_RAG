@@ -22,7 +22,7 @@ if not KH_APP_VERSION:
         # https://stackoverflow.com/a/59533071
         KH_APP_VERSION = version(KH_PACKAGE_NAME)
     except Exception:
-        KH_APP_VERSION = "local"
+        KH_APP_VERSION = "PP2 V1.0"
 
 KH_ENABLE_FIRST_SETUP = True
 KH_DEMO_MODE = config("KH_DEMO_MODE", default=False, cast=bool)

@@ -170,7 +170,7 @@ class App(BaseApp):
                     elif k == "chat-tab":
                         tabs_update.append(gr.update(visible=is_admin))
                     elif k == "chatbot-tab":
-                        tabs_update.append(gr.update(visible=is_admin))
+                        tabs_update.append(gr.update(visible=True))
                         # print("k,tabs_update",k,tabs_update)
                     elif k == "settings-tab":
                         tabs_update.append(gr.update(visible=is_admin))
