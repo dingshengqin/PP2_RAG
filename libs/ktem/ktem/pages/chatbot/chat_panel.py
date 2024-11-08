@@ -11,8 +11,7 @@ class UserChatPanel(BasePage):
         self.chatbot = gr.Chatbot(
             label=self._app.app_name,
             placeholder=(
-                "This is the beginning of a new conversation.\nIf you has problem, "
-                "contact bin.jiang@volkswagen-anhui.com."
+                "This is the beginning of a new conversation"
             ),
             show_label=False,
             elem_id="user-chat-bot",

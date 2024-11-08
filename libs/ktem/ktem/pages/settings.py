@@ -219,7 +219,6 @@ class SettingsPage(BasePage):
         # user management
         self.current_name = gr.Markdown("Current user: ___")
         self.signout = gr.Button("Logout")
-
         self.password_change = gr.Textbox(
             label="New password", interactive=True, type="password"
         )
