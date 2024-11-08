@@ -178,7 +178,35 @@ class ChatbotPage(BasePage):
 
     def on_building_ui(self):
 
-        with gr.Row():
+
+        # with gr.Row():
+            # with gr.Column(scale=11):
+            # # 第二个元素：提示框
+            #     message ="""Any problem, please contact:bin.jiang@volkswagen-anhui.com (Product manager)/shengqin.ding@volkswagen-anhui.com (Product developer)"""
+            #     message_component = gr.HTML(f"""
+            #                 <div style='white-space: pre-wrap; font-size: 18px; font-weight: bold; color: white; text-align: left;'>
+            #                     {message}
+            #                 </div>
+            #             """)
+
+            # with gr.Column(scale=1):
+            # # 第一个元素：图片
+            #     # image_component = gr.Image(value="https://i.ibb.co/p0M3R93/logo.png", label="Logo", elem_id="logo")
+            #     image_component = gr.Image(value="https://i.ibb.co/p0M3R93/logo.png", 
+            #                             label="",  
+            #                             elem_id="logo", 
+            #                             width=50, 
+            #                             height=25,
+            #                             show_download_button=False,
+            #                             interactive=False
+            #                             )
+            #     # 添加右外边距
+            #     image_component.style = {"margin-left": "auto", "margin-right": "-20px"}
+
+            
+        
+        # 以下是基础配置窗口，4个：Conversation、File collection、GraphRAG collection、Chatsettings，暂时不要显示
+        with gr.Row(visible=False):
             self.state_settings = gr.State({})
             with gr.Column(scale=3,elem_id="user-conv-settings-panel") as self.conv_Column:
                 self.chat_control = UserConversationControl(self._app)
@@ -340,6 +368,27 @@ class ChatbotPage(BasePage):
                 
 
             with gr.Column(scale=7, elem_id="chatbot-area"):
+                with gr.Row():
+                    # 添加图片 logo
+                    with gr.Column():
+                        gr.Image(
+                            value="https://i.ibb.co/HN2W3tT/logo-new.png",
+                            elem_id="logo",
+                            show_label=False,
+                            height=50,  # 根据需要调整高度
+                            width=150,   # 根据需要调整宽度
+                            show_download_button=False,
+                        )
+                    with gr.Column():
+                        gr.Markdown(
+                            "<span style='color: white; font-weight: bold;'>"
+                            "Any problem, please contact:<br>"
+                            "bin.jiang@volkswagen-anhui.com (Product manager)<br>"
+                            "shengqin.ding@volkswagen-anhui.com (Product developer)"
+                            "</span>"
+                        )
+
+
                 self.chat_panel = UserChatPanel(self._app)
 
                 # with gr.Row():
