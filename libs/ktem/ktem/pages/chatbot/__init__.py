@@ -383,8 +383,8 @@ class ChatbotPage(BasePage):
                         gr.Markdown(
                             "<span style='color: white; font-weight: bold;'>"
                             "Any problem, please contact:<br>"
-                            "bin.jiang@volkswagen-anhui.com (Product manager)<br>"
-                            "shengqin.ding@volkswagen-anhui.com (Product developer)"
+                            "shengqin.ding@volkswagen-anhui.com<br>"
+                            "bin.jiang@volkswagen-anhui.com"
                             "</span>"
                         )
 

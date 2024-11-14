@@ -53,11 +53,11 @@ class App(BaseApp):
                 self.login_page = LoginPage(self)
 
             with gr.Tab(
-                "Chatbot",
-                elem_id="chatbot-tab",
-                id="chatbot-tab",
+                "PP Chatbot",
+                elem_id="PP-chatbot-tab",
+                id="PP-chatbot-tab",
                 visible=not self.f_user_management,
-            ) as self._tabs["chatbot-tab"]:
+            ) as self._tabs["PP-chatbot-tab"]:
                 self.chatbot_page = ChatbotPage(self)
 
             with gr.Tab(
@@ -169,7 +169,7 @@ class App(BaseApp):
                         tabs_update.append(gr.update(visible=is_admin))
                     elif k == "chat-tab":
                         tabs_update.append(gr.update(visible=is_admin))
-                    elif k == "chatbot-tab":
+                    elif k == "PP-chatbot-tab":
                         tabs_update.append(gr.update(visible=True))
                         # print("k,tabs_update",k,tabs_update)
                     elif k == "settings-tab":
