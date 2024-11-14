@@ -127,7 +127,7 @@ documents and developers who want to build their own RAG pipeline.
    # clone this repo
 
    git clone https://github.com/dingshengqin/PP2_RAG
-   cd kotaemon
+   cd PP2_RAG
 
    pip install -e "libs/kotaemon[all]"
    pip install -e "libs/ktem"
@@ -191,11 +191,13 @@ documents and developers who want to build their own RAG pipeline.
 - \- ***\*Non-Docker Installation\****: If you are not using Docker, install GraphRAG with the following command:
 
 - ```
-   ```shell
+   ​```shell
    pip install graphrag future
    ```
   ```
 
+   ```
+   
 - \- ***\*Setting Up API KEY\****: To use the GraphRAG retriever feature, ensure you set the `GRAPHRAG_API_KEY` environment variable. You can do this directly in your environment or by adding it to a `.env` file.
 
 - \- ***\*Using Local Models and Custom Settings\****: If you want to use GraphRAG with local models (like `Ollama`) or customize the default LLM and other configurations, set the `USE_CUSTOMIZED_GRAPHRAG_SETTING` environment variable to true. Then, adjust your settings in the `settings.yaml.example` file.
@@ -436,7 +438,7 @@ Step3：测试更改push
 
 - 打开vs code，点击左下角图标，进入WSL-Ubuntu
 
-  ![image-20241106132000846](C:\Users\DELL\AppData\Roaming\Typora\typora-user-images\image-20241106132000846.png)
+  ![image-20241106132000846](https://raw.githubusercontent.com/dingshengqin/image4typora/main/image/202411/14/083801-625388.png)
 
 - 任意更改一个文件
 
@@ -482,13 +484,13 @@ New-NetFirewallRule -DisplayName "WSL" -Direction Inbound -InterfaceAlias "vEthe
 
 ip 172.27.235.43 地址通讯在ubuntu查询
 
-![image-20241015101145368](C:\Users\DELL\AppData\Roaming\Typora\typora-user-images\image-20241015101145368.png)
+![image-20241015101145368](https://raw.githubusercontent.com/dingshengqin/image4typora/main/image/202411/14/083804-153357.png)
 
 
 
 进入windows浏览器，输入 xxx.xxx.xxx.xxx:7860, ip地址查询如下
 
-![image-20241015103431457](C:\Users\DELL\AppData\Roaming\Typora\typora-user-images\image-20241015103431457.png)
+![image-20241015103431457](https://raw.githubusercontent.com/dingshengqin/image4typora/main/image/202411/14/083806-169809.png)
 
 
 
