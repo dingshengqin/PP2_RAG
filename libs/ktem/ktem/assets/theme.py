@@ -49,7 +49,7 @@ common = dict(
     # button_small_radius="*radius_xxl",
     # -----
 )
-dark_mode = dict(
+light_mode = dict(
     # body attributes
     body_text_color_subdued_dark="*neutral_300",
     # element colours
@@ -95,7 +95,7 @@ dark_mode = dict(
     button_cancel_background_fill_dark=err_dark,
     button_cancel_background_fill_hover_dark=err_dark_muted,
 )
-light_mode = dict(
+dark_mode = dict(
     background_fill_primary="*neutral_50",
     background_fill_secondary="*neutral_50",
     # body attributes
