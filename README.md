@@ -128,9 +128,15 @@ documents and developers who want to build their own RAG pipeline.
 
    git clone https://github.com/dingshengqin/PP2_RAG
    cd PP2_RAG
+   
+   pip install -e "libs/kotaemon[all]" -i http://mirrors.aliyun.com/pypi/simple/ --trust mirrors.aliyun.com/pypi
+   
+   pip install -e "libs/kotaemon[all]" -i https://pypi.tuna.tsinghua.edu.cn/simple --trust pypi.tuna.tsinghua.edu.cn/simple
 
-   pip install -e "libs/kotaemon[all]"
-   pip install -e "libs/ktem"
+
+   
+   pip install -e "libs/ktem" -i http://mirrors.aliyun.com/pypi/simple/ --trust mirrors.aliyun.com/pypi
+   pip install -e "libs/ktem" -i https://pypi.tuna.tsinghua.edu.cn/simple --trust pypi.tuna.tsinghua.edu.cn/simple
    
 ```
 
@@ -144,7 +150,6 @@ documents and developers who want to build their own RAG pipeline.
 
 
 3. (Optional) To enable in-browser `PDF_JS` viewer, download [PDF_JS_DIST](https://github.com/mozilla/pdf.js/releases/download/v4.0.379/pdfjs-4.0.379-dist.zip) then extract it to `libs/ktem/ktem/assets/prebuilt`
-
 
 <img src="https://raw.githubusercontent.com/dingshengqin/PP2_RAG/main/docs/images/pdf-viewer-setup.png" alt="pdf-setup" width="300">
 
@@ -399,7 +404,7 @@ This file provides another way to configure your models and credentials.
 
 
 
-Step1：vs code安装WSL插件
+## vs code安装WSL插件
 
 ![image-20241106130640658](https://raw.githubusercontent.com/dingshengqin/image4typora/main/image/202411/14/084235-763758.png)
 
@@ -407,7 +412,7 @@ Step1：vs code安装WSL插件
 
 
 
-Step2：Clone 项目
+## Clone 项目
 
 ```
 进入Ubuntu
@@ -418,7 +423,7 @@ git clone https://github.com/dingshengqin/PP2_RAG.git
 
 
 
-Step3：测试更改push
+## 测试更改push
 
 - 从Windows 文档系统进入/home/dshengq/github/PP2_RAG
 
@@ -465,14 +470,14 @@ Step3：测试更改push
 
 
 
-Step4：[打开服务器端口7860的防火墙](https://blog.csdn.net/weixin_52730346/article/details/120720527)
+## [打开服务器端口7860的防火墙](https://blog.csdn.net/weixin_52730346/article/details/120720527)
 
 ```
 备注：
 链接我随便搜的教程，大差不差，供参考
 ```
 
-Step5：[局域网访问wsl](https://blog.csdn.net/u012795439/article/details/135675005)
+## [局域网访问wsl](https://blog.csdn.net/u012795439/article/details/135675005)
 
 在powershell里面输入
 
@@ -494,7 +499,130 @@ ip 172.27.235.43 地址通讯在ubuntu查询
 
 
 
+## 添加rerank模型
+
+### [WSL 2 上的 Docker 远程容器入门](https://learn.microsoft.com/zh-cn/windows/wsl/tutorials/wsl-containers)
+
+- 下载 [Docker Desktop](https://docs.docker.com/docker-for-windows/wsl/#download) 并按照安装说明进行操作。
+
+- 确保在“设置”>“常规”中选中“使用基于 WSL 2 的引擎”。
+
+  ![Docker Desktop 常规设置](https://learn.microsoft.com/zh-cn/windows/wsl/media/docker-running.png)
+
+- 通过转到“设置”>“资源”>“WSL 集成”，从要启用 Docker 集成的已安装 WSL 2 发行版中进行选择
+
+  ![Docker Desktop 资源设置](https://learn.microsoft.com/zh-cn/windows/wsl/media/docker-dashboard.png)
+
+### Ubuntu 安装Docker（6.1的替代方案）
 
 
 
+（1）添加Docker存储库
+
+Docker存储库包含Docker软件包，您需要将其添加到系统中。可以使用以下命令：
+
+```
+sudo apt-get update
+sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+```
+
+
+（2）安装Docker
+
+安装最新版本的Docker Engine和containerd。可以使用以下命令：
+
+```
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+```
+
+
+（3）验证Docker是否安装成功
+
+```
+sudo docker run hello-world
+```
+
+
+此处执行这个命令是会报错的，错误信息如下
+
+```
+docker: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?.
+See 'docker run --help'.
+```
+
+
+原因是wsl2不支持systemctl命令，而是支持systemed命令
+
+所以需要执行如下命令先启动docker
+
+```
+service docker start
+```
+
+### [Ubuntu安装Docker方案3](https://docs.docker.com/desktop/setup/install/linux/ubuntu/)
+
+### 安装Nvidia docker
+
+[参考链接1](https://blog.csdn.net/wsp_1138886114/article/details/128201910)
+
+```
+注意点：
+最后一行sudo service docker start改成sudo systemctl restart docker
+```
+
+
+
+### 安装本地rerank模型
+
+#### Docker
+
+```
+nvidia-smi --query-gpu=compute_cap --format=csv
+
+docker login
+```
+
+```
+model=BAAI/bge-reranker-large
+
+volume=$PWD/data
+
+docker run --gpus all -p 8080:80 -v $volume:/data --pull always 	ghcr.io/huggingface/text-embeddings-inference:86-1.5 --model-id $model
+
+
+docker run --gpus all -d -p 8080:80 --name TEI1 -v $volume:/data --pull always ghcr.io/huggingface/text-embeddings-inference:86-1.5 --model-id $model --auto-truncate=true
+
+
+docker run --gpus all -p 8080:80 --name TEI1  -v $volume:/data --pull always ghcr.io/huggingface/text-embeddings-inference:86-1.5 --model-id $model --max-batch-tokens 32384
+
+如果没有权限尝试
+sudo docker run --gpus all -p 8080:80 -v $volume:/data --pull always 	ghcr.io/huggingface/text-embeddings-inference:86-1.5 --model-id $model
+
+测试
+curl 127.0.0.1:8080/rerank -X POST  -d '{"query":"What is Deep Learning?", "texts": ["Deep Learning is not...", "Deep learning is..."], "raw_scores": false}'  -H 'Content-Type: application/json'
+
+docker ps -a
+docker start <container_id>
+
+
+```
+
+[TEI arguments](https://huggingface.co/docs/text-embeddings-inference/cli_arguments)
+
+endpoint_url: http://localhost:8080/rerank
+
+![image-20241122083257841](https://raw.githubusercontent.com/dingshengqin/image4typora/main/image/202411/22/083259-786876.png)
+
+#### Reference
+
+[搭建TEI平台并部署模型](https://juejin.cn/post/7438545751511629860)
+
+[Bug：docker: Error response from daemon: could not select device driver "" with capabilities: gpu.](https://stackoverflow.com/questions/75118992/docker-error-response-from-daemon-could-not-select-device-driver-with-capab)
+
+[How can I use Docker without sudo?](https://askubuntu.com/questions/477551/how-can-i-use-docker-without-sudo)
+
+[Docker-credential-desktop.exe executable file not found in $PATH using wsl2](https://forums.docker.com/t/docker-credential-desktop-exe-executable-file-not-found-in-path-using-wsl2/100225)
 

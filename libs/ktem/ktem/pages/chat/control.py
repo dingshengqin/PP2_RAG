@@ -39,7 +39,8 @@ class ConversationControl(BasePage):
 
     def on_building_ui(self):
         with gr.Row():
-            gr.Markdown("## Conversations")
+            html_content = "<h2 style='color: white;'>Conversations</h2>"
+            gr.HTML(html_content)
             self.btn_toggle_dark_mode = gr.Button(
                 value="",
                 icon=f"{ASSETS_DIR}/dark_mode.svg",
