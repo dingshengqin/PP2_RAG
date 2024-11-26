@@ -129,15 +129,18 @@ documents and developers who want to build their own RAG pipeline.
    git clone https://github.com/dingshengqin/PP2_RAG
    cd PP2_RAG
    
+   pip install -e "libs/kotaemon[all]" 
+   pip install -e "libs/ktem" 
+```
+
+If fails, you can add download source
+
+```
+  
    pip install -e "libs/kotaemon[all]" -i http://mirrors.aliyun.com/pypi/simple/ --trust mirrors.aliyun.com/pypi
-   
    pip install -e "libs/kotaemon[all]" -i https://pypi.tuna.tsinghua.edu.cn/simple --trust pypi.tuna.tsinghua.edu.cn/simple
-
-
-   
    pip install -e "libs/ktem" -i http://mirrors.aliyun.com/pypi/simple/ --trust mirrors.aliyun.com/pypi
    pip install -e "libs/ktem" -i https://pypi.tuna.tsinghua.edu.cn/simple --trust pypi.tuna.tsinghua.edu.cn/simple
-   
 ```
 
 
@@ -199,9 +202,6 @@ documents and developers who want to build their own RAG pipeline.
    ​```shell
    pip install graphrag future
    ```
-  ```
-
-  ```
   
 - \- ***\*Setting Up API KEY\****: To use the GraphRAG retriever feature, ensure you set the `GRAPHRAG_API_KEY` environment variable. You can do this directly in your environment or by adding it to a `.env` file.
 
@@ -412,13 +412,34 @@ This file provides another way to configure your models and credentials.
 
 
 
-## Clone 项目
+## Clone 项目（和Installation 重复，已经做的不要再做）
 
 ```
 进入Ubuntu
 
-cd  /home/dshengq/github
-git clone https://github.com/dingshengqin/PP2_RAG.git
+  # optional (setup env)
+
+   conda create -n kotaemon python=3.10
+   conda activate kotaemon
+
+
+   # clone this repo
+
+   git clone https://github.com/dingshengqin/PP2_RAG
+   cd PP2_RAG
+   
+   pip install -e "libs/kotaemon[all]" 
+   pip install -e "libs/ktem" 
+```
+
+如果失败，可以添加源
+
+```
+  
+   pip install -e "libs/kotaemon[all]" -i http://mirrors.aliyun.com/pypi/simple/ --trust mirrors.aliyun.com/pypi
+   pip install -e "libs/kotaemon[all]" -i https://pypi.tuna.tsinghua.edu.cn/simple --trust pypi.tuna.tsinghua.edu.cn/simple
+   pip install -e "libs/ktem" -i http://mirrors.aliyun.com/pypi/simple/ --trust mirrors.aliyun.com/pypi
+   pip install -e "libs/ktem" -i https://pypi.tuna.tsinghua.edu.cn/simple --trust pypi.tuna.tsinghua.edu.cn/simple
 ```
 
 
@@ -501,7 +522,7 @@ ip 172.27.235.43 地址通讯在ubuntu查询
 
 ## 添加rerank模型
 
-### [WSL 2 上的 Docker 远程容器入门](https://learn.microsoft.com/zh-cn/windows/wsl/tutorials/wsl-containers)
+### [WSL 2 上的 Docker 安装-推荐](https://learn.microsoft.com/zh-cn/windows/wsl/tutorials/wsl-containers)
 
 - 下载 [Docker Desktop](https://docs.docker.com/docker-for-windows/wsl/#download) 并按照安装说明进行操作。
 
@@ -513,7 +534,7 @@ ip 172.27.235.43 地址通讯在ubuntu查询
 
   ![Docker Desktop 资源设置](https://learn.microsoft.com/zh-cn/windows/wsl/media/docker-dashboard.png)
 
-### Ubuntu 安装Docker（6.1的替代方案）
+### Ubuntu 安装Docker（6.1的替代方案-不推荐）
 
 
 
@@ -562,7 +583,7 @@ See 'docker run --help'.
 service docker start
 ```
 
-### [Ubuntu安装Docker方案3](https://docs.docker.com/desktop/setup/install/linux/ubuntu/)
+### [Ubuntu安装Docker方案3-不推荐](https://docs.docker.com/desktop/setup/install/linux/ubuntu/)
 
 ### 安装Nvidia docker
 
@@ -579,46 +600,94 @@ service docker start
 
 #### Docker
 
-```
-nvidia-smi --query-gpu=compute_cap --format=csv
+创建目录
 
-docker login
 ```
+mkdir /home/username/.cache/huggingface/data
+cd /home/username/.cache/huggingface
+```
+
+下载镜像，大概率下载不下来
 
 ```
 model=BAAI/bge-reranker-large
 
 volume=$PWD/data
 
-docker run --gpus all -p 8080:80 -v $volume:/data --pull always 	ghcr.io/huggingface/text-embeddings-inference:86-1.5 --model-id $model
+docker run --gpus all -p 8080:80 --name TEI  -v $volume:/data --pull always ghcr.io/huggingface/text-embeddings-inference:86-1.5 --model-id $model 
+
+如果没有权限尝试
+sudo docker run --gpus all -p 8080:80 -v $volume:/data --pull always 	ghcr.io/huggingface/text-embeddings-inference:86-1.5 --model-id $model
+```
+
+[手动下载模型](https://huggingface.co/BAAI/bge-reranker-large/tree/main)
+
+```
+下载的内容copy到以下目录,注意onnx的要放到onnx文件夹里面
+home\username\.cache\huggingface\data\models--BAAI--bge-reranker-large\snapshots\55611d7bca2a7133960a6d3b71e083071bbfc312
+```
+
+重新docker run
+
+```
+docker run --gpus all -p 8080:80 --name TEI  -v $volume:/data --pull always ghcr.io/huggingface/text-embeddings-inference:86-1.5 --model-id $model 
+```
+
+出现这个说明部署成功了
+
+![image-20241126083619348](https://raw.githubusercontent.com/dingshengqin/image4typora/main/image/202411/26/083735-339952.png)
+
+测试
+
+```
+
+curl 127.0.0.1:8080/rerank -X POST  -d '{"query":"What is Deep Learning?", "texts": ["Deep Learning is not...", "Deep learning is..."], "raw_scores": false}'  -H 'Content-Type: application/json'
+
+```
+
+Stop和重启容器
+
+```bash
+# 删除容器
+docker rm -f TEI
+# 下次重启容易
+docker start TEI
+# 或者
+docker ps -a
+# 找到TEI的容器ID然后
+docker start <容器ID>
+
+```
 
 
-docker run --gpus all -d -p 8080:80 --name TEI1 -v $volume:/data --pull always ghcr.io/huggingface/text-embeddings-inference:86-1.5 --model-id $model --auto-truncate=true
 
+```
+model=BAAI/bge-reranker-large
 
-docker run --gpus all -p 8080:80 --name TEI1  -v $volume:/data --pull always ghcr.io/huggingface/text-embeddings-inference:86-1.5 --model-id $model --max-batch-tokens 32384
+volume=$PWD/data
+
+docker run --gpus all -p 8080:80 --name TEI  -v $volume:/data --pull always ghcr.io/huggingface/text-embeddings-inference:86-1.5 --model-id $model 
 
 如果没有权限尝试
 sudo docker run --gpus all -p 8080:80 -v $volume:/data --pull always 	ghcr.io/huggingface/text-embeddings-inference:86-1.5 --model-id $model
 
-测试
-curl 127.0.0.1:8080/rerank -X POST  -d '{"query":"What is Deep Learning?", "texts": ["Deep Learning is not...", "Deep learning is..."], "raw_scores": false}'  -H 'Content-Type: application/json'
-
-docker ps -a
-docker start <container_id>
 
 
 ```
 
-[TEI arguments](https://huggingface.co/docs/text-embeddings-inference/cli_arguments)
+#### PP2_RAG 配置
 
 endpoint_url: http://localhost:8080/rerank
 
 ![image-20241122083257841](https://raw.githubusercontent.com/dingshengqin/image4typora/main/image/202411/22/083259-786876.png)
 
+
+
 #### Reference
 
 [搭建TEI平台并部署模型](https://juejin.cn/post/7438545751511629860)
+
+[TEI arguments](https://huggingface.co/docs/text-embeddings-inference/cli_arguments)
 
 [Bug：docker: Error response from daemon: could not select device driver "" with capabilities: gpu.](https://stackoverflow.com/questions/75118992/docker-error-response-from-daemon-could-not-select-device-driver-with-capab)
 
