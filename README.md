@@ -1,4 +1,4 @@
-PP2_RAG 项目维护指南
+DoPP2_RAG 项目维护指南
 
 
 
@@ -522,7 +522,9 @@ ip 172.27.235.43 地址通讯在ubuntu查询
 
 ## 添加rerank模型
 
-### [WSL 2 上的 Docker 安装-推荐](https://learn.microsoft.com/zh-cn/windows/wsl/tutorials/wsl-containers)
+### Docker 安装
+
+#### [方案1：WSL 2 上的 Docker 安装-推荐](https://learn.microsoft.com/zh-cn/windows/wsl/tutorials/wsl-containers)
 
 - 下载 [Docker Desktop](https://docs.docker.com/docker-for-windows/wsl/#download) 并按照安装说明进行操作。
 
@@ -534,7 +536,7 @@ ip 172.27.235.43 地址通讯在ubuntu查询
 
   ![Docker Desktop 资源设置](https://learn.microsoft.com/zh-cn/windows/wsl/media/docker-dashboard.png)
 
-### Ubuntu 安装Docker（6.1的替代方案-不推荐）
+#### 方案2：Ubuntu 安装Docker方案2（不推荐）
 
 
 
@@ -583,9 +585,9 @@ See 'docker run --help'.
 service docker start
 ```
 
-### [Ubuntu安装Docker方案3-不推荐](https://docs.docker.com/desktop/setup/install/linux/ubuntu/)
+#### [方案3：Ubuntu安装Docker-不推荐](https://docs.docker.com/desktop/setup/install/linux/ubuntu/)
 
-### 安装Nvidia docker
+#### 方案4：安装Nvidia docker-不推荐
 
 [参考链接1](https://blog.csdn.net/wsp_1138886114/article/details/128201910)
 
@@ -598,7 +600,7 @@ service docker start
 
 ### 安装本地rerank模型
 
-#### Docker
+#### Docker本地下载镜像
 
 创建目录
 
@@ -617,7 +619,7 @@ volume=$PWD/data
 docker run --gpus all -p 8080:80 --name TEI  -v $volume:/data --pull always ghcr.io/huggingface/text-embeddings-inference:86-1.5 --model-id $model 
 
 如果没有权限尝试
-sudo docker run --gpus all -p 8080:80 -v $volume:/data --pull always 	ghcr.io/huggingface/text-embeddings-inference:86-1.5 --model-id $model
+sudo docker run --gpus all -p 8080:80 TEI -v $volume:/data --pull always 	ghcr.io/huggingface/text-embeddings-inference:86-1.5 --model-id $model
 ```
 
 [手动下载模型](https://huggingface.co/BAAI/bge-reranker-large/tree/main)
@@ -650,7 +652,7 @@ Stop和重启容器
 ```bash
 # 删除容器
 docker rm -f TEI
-# 下次重启容易
+# 下次重启容器
 docker start TEI
 # 或者
 docker ps -a
@@ -694,4 +696,12 @@ endpoint_url: http://localhost:8080/rerank
 [How can I use Docker without sudo?](https://askubuntu.com/questions/477551/how-can-i-use-docker-without-sudo)
 
 [Docker-credential-desktop.exe executable file not found in $PATH using wsl2](https://forums.docker.com/t/docker-credential-desktop-exe-executable-file-not-found-in-path-using-wsl2/100225)
+
+
+
+### Docker 本地镜像
+
+```
+docker build -t pp2_rag:0.0.1 .
+```
 
