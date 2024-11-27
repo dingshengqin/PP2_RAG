@@ -89,6 +89,8 @@ button.selected {
 #user-chat-bot {
   background: var(--background-fill-primary);
   flex: auto;
+  overflow-y: auto;  /* 允许垂直滚动 */
+  max-height: 1000px; /* 设置最大高度 */
 }
 
 
