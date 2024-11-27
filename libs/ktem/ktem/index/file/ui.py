@@ -209,7 +209,7 @@ class FileIndexPage(BasePage):
                 placeholder="Group name",
                 lines=1,
                 max_lines=1,
-                interactive=False,
+                interactive=True,
             )
             self.group_files = gr.Dropdown(
                 label="Attached files",
@@ -764,6 +764,7 @@ class FileIndexPage(BasePage):
         onGroupSaved = self.group_save_button.click(
             fn=self.save_group,
             inputs=[self.group_name, self.group_files, self._app.user_id],
+            outputs=[self.group_list_state, self.group_list],  # 更新的输出
         ).then(
             self.list_group,
             inputs=[self._app.user_id, self.file_list_state],
@@ -1167,6 +1168,7 @@ class FileIndexPage(BasePage):
             current_group = session.query(FileGroup).filter_by(name=group_name).first()
 
             if not current_group:
+                print("not current_group")
                 current_group = FileGroup(
                     name=group_name,
                     data={"files": group_files},  # type: ignore
@@ -1176,6 +1178,7 @@ class FileIndexPage(BasePage):
                 session.commit()
             else:
                 # update current group with new info
+                print("is current_group")
                 current_group.name = group_name
                 current_group.data["files"] = group_files  # Update the files
                 session.commit()

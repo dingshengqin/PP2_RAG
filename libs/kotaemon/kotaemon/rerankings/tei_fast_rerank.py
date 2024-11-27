@@ -58,57 +58,6 @@ class TeiFastReranking(BaseReranking):
         return split_list
 
 
-
-    # def run(self, documents: list[Document], query: str) -> list[Document]:
-    #     """Use the deployed TEI rerankings service to re-order documents
-    #     with their relevance score"""
-    #     if not self.endpoint_url:
-    #         print("TEI API reranking URL not found. Skipping rerankings.")
-    #         return documents
-
-    #     compressed_docs: list[Document] = []
-
-    #     if not documents:  # to avoid empty api call
-    #         return compressed_docs
-
-    #     if isinstance(documents[0], str):
-    #         documents = self.prepare_input(documents)
-
-    #     batch_size = 6
-    #     num_batch = max(len(documents) // batch_size, 1)
-    #     for i in range(num_batch):
-    #         if i == num_batch - 1:
-    #             mini_batch = documents[batch_size * i :]
-    #         else:
-    #             mini_batch = documents[batch_size * i : batch_size * (i + 1)]
-    #         # print(f"mini_batch[0]: {mini_batch[0]}")
-    #         # print(f"Type of mini_batch: {[type(d) for d in mini_batch]}")
-    #         _docs = [d.content for d in mini_batch]
-
-    #         _docs = self.split_docs(_docs)
-        
-    #         # 打印 _docs 的内容和类型
-    #         # print("内容类型:", type(_docs))
-    #         # print("内容数量:", len(_docs))
-    #         # for index, doc in enumerate(_docs):
-    #         #     print(f"文档 {index} 的类型: {type(doc)}")
-    #         #     print(f"文档 {index} 的内容: {doc}")
-    #         rerank_resp = self.client(query, _docs)
-    #         print(f"rerank_resp: {rerank_resp}")
-    #         for r in rerank_resp:
-    #             print("type r",type(r))
-    #             print("r index ",int(r["index"]))
-    #             # doc = mini_batch[int(r["index"])]
-    #             doc = mini_batch[r["index"]]
-    #             doc.metadata["reranking_score"] = r["score"]
-    #             compressed_docs.append(doc)
-
-    #     compressed_docs = sorted(
-    #         compressed_docs, key=lambda x: x.metadata["reranking_score"], reverse=True
-    #     )
-    #     return compressed_docs
-
-
     def run(self, documents: list[Document], query: str) -> list[Document]:
         """Use the deployed TEI rerankings service to re-order documents
         with their relevance score"""
