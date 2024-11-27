@@ -40,8 +40,8 @@ COPY .env.example /app/.env
 # Install pip packages
 RUN --mount=type=ssh  \
     --mount=type=cache,target=/root/.cache/pip  \
-    pip install -e "libs/kotaemon" \
-    && pip install -e "libs/ktem" \
+    pip install -e "libs/kotaemon" -i http://mirrors.aliyun.com/pypi/simple/ --trust mirrors.aliyun.com/pypi \
+    && pip install -e "libs/ktem"  -i http://mirrors.aliyun.com/pypi/simple/ --trust mirrors.aliyun.com/pypi \
     && pip install "pdfservices-sdk@git+https://github.com/niallcm/pdfservices-python-sdk.git@bump-and-unfreeze-requirements"
 
 RUN --mount=type=ssh  \
