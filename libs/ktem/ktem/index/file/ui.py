@@ -1281,6 +1281,7 @@ class FileSelector(BasePage):
             choices=[
                 ("Search All", "all"),
                 ("Search In File(s)", "select"),
+                ("Don't search files", "none"),  # 新选项
             ],
             container=False,
         )
@@ -1310,8 +1311,10 @@ class FileSelector(BasePage):
         if user_id is None:
             return []
 
-        if mode == "disabled":
-            return []
+        # if mode == "disabled":
+        #     return []
+        if mode == "none":  # 检查是否选择了“不选择任何文档”
+            return []  # 返回空列表表示不选择任何文档
         elif mode == "select":
             return selected
 
