@@ -41,6 +41,7 @@ class BaseChatOpenAI(ChatLLM):
     )
     max_tokens: Optional[int] = Param(
         None,
+        # 10000,
         help=(
             "Maximum number of tokens to generate. The total length of input tokens "
             "and generated tokens is limited by the model's context length."

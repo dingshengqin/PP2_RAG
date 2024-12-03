@@ -362,7 +362,7 @@ class GraphRAGRetrieverPipeline(BaseFileIndexRetriever):
             "embedding_vectorstore_key": EntityVectorStoreKey.ID,
             # set this to EntityVectorStoreKey.TITLE i
             # f the vectorstore uses entity title as ids
-            "max_tokens": 12_000,
+            "max_tokens": 12000,
             # change this based on the token limit you have on your model
             # (if you are using a model with 8k limit, a good setting could be 5000)
         }

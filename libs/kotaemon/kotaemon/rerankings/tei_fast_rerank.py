@@ -73,16 +73,35 @@ class TeiFastReranking(BaseReranking):
         if isinstance(documents[0], str):
             documents = self.prepare_input(documents)
 
-        batch_size = 6
-        num_batch = max(len(documents) // batch_size, 1)
+        # batch_size = 6
+        # num_batch = max(len(documents) // batch_size, 1)
+        # 计算最大 batch_size，使得 num_batch 不超过 32
+        total_documents = len(documents)
+        max_num_batch = 32
+        max_batch_size = (total_documents + max_num_batch - 1) // max_num_batch  # 向上取整
+
+        # 最终的 batch_size 取 max_batch_size 和 32 之间的最小值
+        batch_size = min(max_batch_size, 32)
+
+        num_batch = (total_documents + batch_size - 1) // batch_size  # 向上取整
+
+        print("num_batch,batch_size",num_batch,batch_size)
+
         for i in range(num_batch):
             if i == num_batch - 1:
                 mini_batch = documents[batch_size * i :]
             else:
                 mini_batch = documents[batch_size * i : batch_size * (i + 1)]
             
+            # mini_batch = mini_batch[:32]  
+
             _docs = [d.content for d in mini_batch]
             _docs = self.split_docs(_docs)
+
+            # 检查 _docs 里每个元素的长度
+            for i, doc in enumerate(_docs):
+                print(f"Document {i} length: {len(doc)}")
+
 
             rerank_resp = self.client(query, _docs)
             print(f"rerank_resp: {rerank_resp}")
@@ -95,8 +114,8 @@ class TeiFastReranking(BaseReranking):
                 original_indices.extend([doc] * num_parts)
 
             for r in rerank_resp:
-                print("type r", type(r))
-                print("r index ", int(r["index"]))
+                # print("type r", type(r))
+                # print("r index ", int(r["index"]))
                 # 使用切分后的索引来获取原始文档
                 original_doc = original_indices[int(r["index"])]
                 original_doc.metadata["reranking_score"] = r["score"]
