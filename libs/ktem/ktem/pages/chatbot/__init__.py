@@ -206,9 +206,9 @@ class ChatbotPage(BasePage):
             
         
         # 以下是基础配置窗口，4个：Conversation、File collection、GraphRAG collection、Chatsettings，暂时不要显示
-        with gr.Row(visible=False):
+        with gr.Row():
             self.state_settings = gr.State({})
-            with gr.Column(scale=3,elem_id="user-conv-settings-panel") as self.conv_Column:
+            with gr.Column(scale=3,elem_id="user-conv-settings-panel",visible=False) as self.conv_Column:
                 self.chat_control = UserConversationControl(self._app)
 
                 # if getattr(flowsettings, "KH_FEATURE_CHAT_SUGGESTION", False):
@@ -247,65 +247,8 @@ class ChatbotPage(BasePage):
             #             setattr(self, f"_index_{index.id}", index_ui)
 
             
-            for index_id, index in enumerate(self._app.index_manager.indices):
-                index.selector = None
-                index_ui = index.get_selector_component_ui()
-                if not index_ui:
-                    # the index doesn't have a selector UI component
-                    continue
-
-                index_ui.unrender()  # need to rerender later within Accordion
-
-                if index.name == "File":
-                    with gr.Column(scale=3,elem_id="Collection setting ") as self.conv_Column:
-
-                        with gr.Accordion(
-                            label=f"{index.name} Collection" ,
-                            open= False
-                        ):
-                            index_ui.render()
-                            gr_index = index_ui.as_gradio_component()
-                            if gr_index:
-                                if isinstance(gr_index, list):
-                                    index.selector = tuple(
-                                        range(
-                                            len(self._indices_input),
-                                            len(self._indices_input) + len(gr_index),
-                                        )
-                                    )
-                                    index.default_selector = index_ui.default()
-                                    self._indices_input.extend(gr_index)
-                                else:
-                                    index.selector = len(self._indices_input)
-                                    index.default_selector = index_ui.default()
-                                    self._indices_input.append(gr_index)
-                            setattr(self, f"_index_{index.id}", index_ui)
-
-                if index.name == "GraphRAG":
-                    with gr.Column(scale=3,elem_id="Collection setting ") as self.conv_Column:
-
-                        with gr.Accordion(
-                            label=f"{index.name} Collection" + (" - not available now" if index.name == "GraphRAG" else ""),
-                            open=index_id < 1
-                        ):
-                            index_ui.render()
-                            gr_index = index_ui.as_gradio_component()
-                            if gr_index:
-                                if isinstance(gr_index, list):
-                                    index.selector = tuple(
-                                        range(
-                                            len(self._indices_input),
-                                            len(self._indices_input) + len(gr_index),
-                                        )
-                                    )
-                                    index.default_selector = index_ui.default()
-                                    self._indices_input.extend(gr_index)
-                                else:
-                                    index.selector = len(self._indices_input)
-                                    index.default_selector = index_ui.default()
-                                    self._indices_input.append(gr_index)
-                            setattr(self, f"_index_{index.id}", index_ui)
-            with gr.Column(scale=3,):
+            
+            with gr.Column(scale=3,visible=False):
                 with gr.Accordion(label="Chat settings(only ollama available now)", open=False):
                     # a quick switch for reasoning type option
                     with gr.Row():
@@ -367,10 +310,10 @@ class ChatbotPage(BasePage):
                 #     self.image_component = gr.Image(value=image_path_new, elem_id="custom-image2",show_label=False,show_download_button=False)
                 
 
-            with gr.Column(scale=7, elem_id="chatbot-area"):
+            with gr.Column(scale=8, elem_id="chatbot-area"):
                 with gr.Row():
                     # 添加图片 logo
-                    with gr.Column():
+                    with gr.Column(scale=3):
                         gr.Image(
                             value="https://i.ibb.co/HN2W3tT/logo-new.png",
                             elem_id="logo",
@@ -379,7 +322,7 @@ class ChatbotPage(BasePage):
                             width=150,   # 根据需要调整宽度
                             show_download_button=False,
                         )
-                    with gr.Column():
+                    with gr.Column(scale=3):
                         gr.Markdown(
                             "<span style='color: white; font-weight: bold;'>"
                             "Any problem, please contact:<br>"
@@ -387,6 +330,66 @@ class ChatbotPage(BasePage):
                             "bin.jiang@volkswagen-anhui.com"
                             "</span>"
                         )
+                    for index_id, index in enumerate(self._app.index_manager.indices):
+                        index.selector = None
+                        index_ui = index.get_selector_component_ui()
+                        if not index_ui:
+                            # the index doesn't have a selector UI component
+                            continue
+
+                        index_ui.unrender()  # need to rerender later within Accordion
+
+                        if index.name == "File":
+                            with gr.Column(scale=2,elem_id="Collection setting ",visible=True) as self.conv_Column:
+
+                                with gr.Accordion(
+                                    label=f"{index.name} Collection" ,
+                                    open= False
+                                ):
+                                    index_ui.render()
+                                    gr_index = index_ui.as_gradio_component()
+                                    if gr_index:
+                                        if isinstance(gr_index, list):
+                                            index.selector = tuple(
+                                                range(
+                                                    len(self._indices_input),
+                                                    len(self._indices_input) + len(gr_index),
+                                                )
+                                            )
+                                            index.default_selector = index_ui.default()
+                                            self._indices_input.extend(gr_index)
+                                        else:
+                                            index.selector = len(self._indices_input)
+                                            index.default_selector = index_ui.default()
+                                            self._indices_input.append(gr_index)
+                                    setattr(self, f"_index_{index.id}", index_ui)
+
+                        if index.name == "GraphRAG":
+                            with gr.Column(scale=2,elem_id="Collection setting ",visible=False) as self.conv_Column:
+
+                                with gr.Accordion(
+                                    label=f"{index.name} Collection" + (" - not available now" if index.name == "GraphRAG" else ""),
+                                    open=index_id < 1
+                                ):
+                                    index_ui.render()
+                                    gr_index = index_ui.as_gradio_component()
+                                    if gr_index:
+                                        if isinstance(gr_index, list):
+                                            index.selector = tuple(
+                                                range(
+                                                    len(self._indices_input),
+                                                    len(self._indices_input) + len(gr_index),
+                                                )
+                                            )
+                                            index.default_selector = index_ui.default()
+                                            self._indices_input.extend(gr_index)
+                                        else:
+                                            index.selector = len(self._indices_input)
+                                            index.default_selector = index_ui.default()
+                                            self._indices_input.append(gr_index)
+                                    setattr(self, f"_index_{index.id}", index_ui)
+
+
 
 
                 self.chat_panel = UserChatPanel(self._app)
