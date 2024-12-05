@@ -178,74 +178,23 @@ class ChatbotPage(BasePage):
 
     def on_building_ui(self):
 
-
-        # with gr.Row():
-            # with gr.Column(scale=11):
-            # # 第二个元素：提示框
-            #     message ="""Any problem, please contact:bin.jiang@volkswagen-anhui.com (Product manager)/shengqin.ding@volkswagen-anhui.com (Product developer)"""
-            #     message_component = gr.HTML(f"""
-            #                 <div style='white-space: pre-wrap; font-size: 18px; font-weight: bold; color: white; text-align: left;'>
-            #                     {message}
-            #                 </div>
-            #             """)
-
-            # with gr.Column(scale=1):
-            # # 第一个元素：图片
-            #     # image_component = gr.Image(value="https://i.ibb.co/p0M3R93/logo.png", label="Logo", elem_id="logo")
-            #     image_component = gr.Image(value="https://i.ibb.co/p0M3R93/logo.png", 
-            #                             label="",  
-            #                             elem_id="logo", 
-            #                             width=50, 
-            #                             height=25,
-            #                             show_download_button=False,
-            #                             interactive=False
-            #                             )
-            #     # 添加右外边距
-            #     image_component.style = {"margin-left": "auto", "margin-right": "-20px"}
-
-            
-        
-        # 以下是基础配置窗口，4个：Conversation、File collection、GraphRAG collection、Chatsettings，暂时不要显示
         with gr.Row():
-            self.state_settings = gr.State({})
-            with gr.Column(scale=3,elem_id="user-conv-settings-panel",visible=False) as self.conv_Column:
-                self.chat_control = UserConversationControl(self._app)
+            # self.state_chat = gr.State(STATE)
+            # self.state_retrieval_history = gr.State([])
+            # self.state_chat_history = gr.State([])
+            # self.state_plot_history = gr.State([])
+            # self.state_settings = gr.State({})
+            # self.state_info_panel = gr.State("")
+            # self.state_plot_panel = gr.State(None)
+            # self.state_follow_up = gr.State(None)
 
-                # if getattr(flowsettings, "KH_FEATURE_CHAT_SUGGESTION", False):
-                #     self.chat_suggestion = ChatbotSuggestion(self._app)
 
-            # with gr.Column(scale=4,elem_id="Collection setting ") as self.conv_Column:
-            
-            #     for index_id, index in enumerate(self._app.index_manager.indices):
-            #         index.selector = None
-            #         index_ui = index.get_selector_component_ui()
-            #         if not index_ui:
-            #             # the index doesn't have a selector UI component
-            #             continue
-
-            #         index_ui.unrender()  # need to rerender later within Accordion
-            #         with gr.Accordion(
-            #             label=f"{index.name} Collection" + (" - not available now" if index.name == "GraphRAG" else ""),
-            #             open=index_id < 1
-            #         ):
-            #             index_ui.render()
-            #             gr_index = index_ui.as_gradio_component()
-            #             if gr_index:
-            #                 if isinstance(gr_index, list):
-            #                     index.selector = tuple(
-            #                         range(
-            #                             len(self._indices_input),
-            #                             len(self._indices_input) + len(gr_index),
-            #                         )
-            #                     )
-            #                     index.default_selector = index_ui.default()
-            #                     self._indices_input.extend(gr_index)
-            #                 else:
-            #                     index.selector = len(self._indices_input)
-            #                     index.default_selector = index_ui.default()
-            #                     self._indices_input.append(gr_index)
-            #             setattr(self, f"_index_{index.id}", index_ui)
-
+            self.state_chat = gr.State(STATE)
+            self.state_retrieval_history = gr.State([])
+            self.state_plot_history = gr.State([])
+            self.state_plot_panel = gr.State(None)
+            self.state_follow_up = gr.State(None)
+        
             
             
             with gr.Column(scale=3,visible=False):
@@ -279,14 +228,7 @@ class ChatbotPage(BasePage):
                         )
 
 
-        with gr.Row():
-            self.state_chat = gr.State(STATE)
-            self.state_retrieval_history = gr.State([])
-            self.state_chat_history = gr.State([])
-            self.state_plot_history = gr.State([])
-            # self.state_settings = gr.State({})
-            self.state_info_panel = gr.State("")
-            self.state_plot_panel = gr.State(None)
+
 
             
 
@@ -340,7 +282,7 @@ class ChatbotPage(BasePage):
                         index_ui.unrender()  # need to rerender later within Accordion
 
                         if index.name == "File":
-                            with gr.Column(scale=2,elem_id="Collection setting ",visible=True) as self.conv_Column:
+                            with gr.Column(scale=3,elem_id="Collection setting ",visible=True) as self.conv_Column:
 
                                 with gr.Accordion(
                                     label=f"{index.name} Collection" ,
@@ -365,7 +307,7 @@ class ChatbotPage(BasePage):
                                     setattr(self, f"_index_{index.id}", index_ui)
 
                         if index.name == "GraphRAG":
-                            with gr.Column(scale=2,elem_id="Collection setting ",visible=False) as self.conv_Column:
+                            with gr.Column(scale=3,elem_id="Collection setting ",visible=False) as self.conv_Column:
 
                                 with gr.Accordion(
                                     label=f"{index.name} Collection" + (" - not available now" if index.name == "GraphRAG" else ""),
@@ -388,6 +330,8 @@ class ChatbotPage(BasePage):
                                             index.default_selector = index_ui.default()
                                             self._indices_input.append(gr_index)
                                     setattr(self, f"_index_{index.id}", index_ui)
+                    with gr.Column(scale=3,elem_id="user-conv-settings-panel",visible=True) as self.conv_Column:
+                        self.chat_control = UserConversationControl(self._app)
 
 
 
@@ -569,14 +513,14 @@ class ChatbotPage(BasePage):
             concurrency_limit=20,
         )
 
-        self.chat_control.btn_info_expand.click(
-            fn=lambda is_expanded: (
-                gr.update(scale=INFO_PANEL_SCALES[is_expanded]),
-                not is_expanded,
-            ),
-            inputs=self._info_panel_expanded,
-            outputs=[self.info_column, self._info_panel_expanded],
-        )
+        # self.chat_control.btn_info_expand.click(
+        #     fn=lambda is_expanded: (
+        #         gr.update(scale=INFO_PANEL_SCALES[is_expanded]),
+        #         not is_expanded,
+        #     ),
+        #     inputs=self._info_panel_expanded,
+        #     outputs=[self.info_column, self._info_panel_expanded],
+        # )
 
         self.chat_panel.chatbot.like(
             fn=self.is_liked,
@@ -601,7 +545,7 @@ class ChatbotPage(BasePage):
                 self.state_plot_panel,
                 self.state_retrieval_history,
                 self.state_plot_history,
-                self.chat_control.cb_is_public,
+                # self.chat_control.cb_is_public,
                 self.state_chat,
             ]
             + self._indices_input,
@@ -635,7 +579,7 @@ class ChatbotPage(BasePage):
                 self.state_plot_panel,
                 self.state_retrieval_history,
                 self.state_plot_history,
-                self.chat_control.cb_is_public,
+                # self.chat_control.cb_is_public,
                 self.state_chat,
             ]
             + self._indices_input,
@@ -687,7 +631,7 @@ class ChatbotPage(BasePage):
                 self.state_plot_panel,
                 self.state_retrieval_history,
                 self.state_plot_history,
-                self.chat_control.cb_is_public,
+                # self.chat_control.cb_is_public,
                 self.state_chat,
             ]
             + self._indices_input,
@@ -722,12 +666,13 @@ class ChatbotPage(BasePage):
             fn=None, inputs=None, outputs=None, js=pdfview_js
         )
 
-        self.chat_control.cb_is_public.change(
-            self.on_set_public_conversation,
-            inputs=[self.chat_control.cb_is_public, self.chat_control.conversation],
-            outputs=None,
-            show_progress="hidden",
-        )
+        # self.chat_control.cb_is_public.change(
+        #     self.on_set_public_conversation,
+        #     # inputs=[self.chat_control.cb_is_public, self.chat_control.conversation],
+        #     inputs=[self.chat_control.conversation],
+        #     outputs=None,
+        #     show_progress="hidden",
+        # )
 
         # self.report_issue.report_btn.click(
         #     self.report_issue.report,
@@ -865,7 +810,7 @@ class ChatbotPage(BasePage):
                         self.state_plot_panel,
                         self.state_retrieval_history,
                         self.state_plot_history,
-                        self.chat_control.cb_is_public,
+                        # self.chat_control.cb_is_public,
                     ]
                     + self._indices_input,
                     "show_progress": "hidden",
@@ -890,17 +835,31 @@ class ChatbotPage(BasePage):
             return
 
         # if not regen, then append the new message
-        if not state["app"].get("regen", False):
-            retrival_history = retrival_history + [retrieval_msg]
-            plot_history = plot_history + [plot_data]
-        else:
-            if retrival_history:
-                print("Updating retrieval history (regen=True)")
-                retrival_history[-1] = retrieval_msg
-                plot_history[-1] = plot_data
+        print('state_persist_data_source:',state)
+        # print('state["app"]:',state["app"])
+        # print('state["app"].get("regen", False):',state["app"].get("regen", False))
+
+        # if not state["app"].get("regen", False):
+        #     retrival_history = retrival_history + [retrieval_msg]
+        #     plot_history = plot_history + [plot_data]
+        # else:
+        #     if retrival_history:
+        #         print("Updating retrieval history (regen=True)")
+        #         retrival_history[-1] = retrieval_msg
+        #         plot_history[-1] = plot_data
+
+        if isinstance(state, dict) and not state.get("app", {}).get("regen", False):
+            if retrival_history:  # 检查 retrival_history 是否非空
+                retrival_history.append(retrieval_msg)
+                plot_history.append(plot_data)
+        elif isinstance(state, bool) and not state:
+            if retrival_history:  # 检查 retrival_history 是否非空
+                retrival_history.append(retrieval_msg)
+                plot_history.append(plot_data)
+
 
         # reset regen state
-        state["app"]["regen"] = False
+        # state["app"]["regen"] = False
 
         selecteds_ = {}
         for index in self._app.index_manager.indices:
@@ -988,6 +947,7 @@ class ChatbotPage(BasePage):
         # override reasoning_mode by temporary chat page state
         print("Session reasoning type", session_reasoning_type)
         print("Session LLM", session_llm)
+        print("state:",state)
         reasoning_mode = (
             settings["reasoning.use"]
             if session_reasoning_type in (DEFAULT_SETTING, None)
@@ -1021,6 +981,16 @@ class ChatbotPage(BasePage):
             "app": deepcopy(state["app"]),
             "pipeline": deepcopy(state.get(reasoning_id, {})),
         }
+        # if isinstance(state, dict):
+        #     reasoning_state = {
+        #         "app": deepcopy(state.get("app", {})),  # 使用 get 以防止 KeyError
+        #         "pipeline": deepcopy(state.get(reasoning_id, {})),
+        #     }
+        # else:  # 如果 state 是布尔值或其他类型
+        #     reasoning_state = {
+        #         "app": {},  # 默认值
+        #         "pipeline": {},
+        #     }
 
         pipeline = reasoning_cls.get_pipeline(settings, reasoning_state, retrievers)
 
@@ -1056,7 +1026,7 @@ class ChatbotPage(BasePage):
 
         text, refs, plot, plot_gr = "", "", None, gr.update(visible=False)
         msg_placeholder = getattr(
-            flowsettings, "KH_CHAT_MSG_PLACEHOLDER", "Thinking ..."
+            flowsettings, "KH_CHAT_MSG_PLACEHOLDER", "Thinking ..., first commit need a moment"
         )
         print(msg_placeholder)
         yield (
