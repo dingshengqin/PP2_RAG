@@ -93,17 +93,17 @@ class UserConversationControl(BasePage):
                     size="sm",
                     elem_classes=["no-background", "body-text-color"],
                 )
-                self.btn_info_expand = gr.Button(
-                    value="",
-                    icon=f"{ASSETS_DIR}/sidebar.svg",
-                    min_width=2,
-                    scale=1,
-                    size="sm",
-                    elem_classes=["no-background", "body-text-color"],
-                )
-                self.cb_is_public = gr.Checkbox(
-                    value=False, label="Shared", min_width=10, scale=4
-                )
+                # self.btn_info_expand = gr.Button(
+                #     value="",
+                #     icon=f"{ASSETS_DIR}/sidebar.svg",
+                #     min_width=2,
+                #     scale=1,
+                #     size="sm",
+                #     elem_classes=["no-background", "body-text-color"],
+                # )
+                # self.cb_is_public = gr.Checkbox(
+                #     value=False, label="Shared", min_width=10, scale=4
+                # )
 
             with gr.Row(visible=False) as self._delete_confirm:
                 self.btn_del_conf = gr.Button(

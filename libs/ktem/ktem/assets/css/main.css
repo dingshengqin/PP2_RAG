@@ -73,6 +73,9 @@ button.selected {
 }
 
 .indices-tab,
+
+
+
 #resources-tab {
   /* Other view should not be too wide */
   border: none !important;
@@ -128,7 +131,9 @@ button.selected {
   max-height: var(--main-area-height) !important;
   flex-wrap: unset;
   overflow-y: scroll !important;
-  position: sticky;
+  /* position: sticky; */
+  position: relative; /* 确保下拉框的定位 */
+  z-index: 10; /* 设置 z-index 确保在其它元素之上 */
 }
 
 
