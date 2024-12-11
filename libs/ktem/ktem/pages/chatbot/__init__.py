@@ -292,7 +292,7 @@ class ChatbotPage(BasePage):
             with gr.Column(scale=3,):
                     gr.Markdown(
                         "<span style='color: white; font-weight: bold; font-size: 15px;'>"
-                        "Contactor:bin.jiang@volkswagen-anhui.com<br>"
+                        "PP2 Contactor : bin.jiang@volkswagen-anhui.com<br>"
                         "</span>"
                     )
             with gr.Column(scale=3,visible=False):
@@ -831,7 +831,7 @@ class ChatbotPage(BasePage):
                         self.state_plot_panel,
                         self.state_retrieval_history,
                         self.state_plot_history,
-                        self.chat_control.cb_is_public,
+                        # self.chat_control.cb_is_public,
                     ]
                     + self._indices_input,
                     "show_progress": "hidden",

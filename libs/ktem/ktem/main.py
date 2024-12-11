@@ -53,7 +53,7 @@ class App(BaseApp):
                     self.login_page = LoginPage(self)
 
             with gr.Tab(
-                "Chatbot",
+                "PP Chatbot",
                 elem_id="chatbot-tab",
                 id="chatbot-tab",
                 visible=not self.f_user_management,

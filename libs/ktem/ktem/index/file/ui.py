@@ -209,7 +209,7 @@ class FileIndexPage(BasePage):
                 placeholder="Group name",
                 lines=1,
                 max_lines=1,
-                interactive=False,
+                interactive=True,
             )
             self.group_files = gr.Dropdown(
                 label="Attached files",
@@ -764,6 +764,7 @@ class FileIndexPage(BasePage):
         onGroupSaved = self.group_save_button.click(
             fn=self.save_group,
             inputs=[self.group_name, self.group_files, self._app.user_id],
+            outputs=[self.group_list_state, self.group_list],  # 更新的输出
         ).then(
             self.list_group,
             inputs=[self._app.user_id, self.file_list_state],
@@ -1276,8 +1277,9 @@ class FileSelector(BasePage):
         self.mode = gr.Radio(
             value=default_mode,
             choices=[
-                ("Search All", "all"),
-                ("Search In File(s)", "select"),
+                ("Planner mode", "all"),
+                ("Expert mode", "select"),
+                ("General mode", "none"),  # 新选项
             ],
             container=False,
         )
@@ -1309,6 +1311,8 @@ class FileSelector(BasePage):
 
         if mode == "disabled":
             return []
+        elif mode == "none":  # 检查是否选择了“不选择任何文档”
+            return []  # 返回空列表表示不选择任何文档
         elif mode == "select":
             return selected
 

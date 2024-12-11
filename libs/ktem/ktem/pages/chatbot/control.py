@@ -102,7 +102,7 @@ class UserConversationControl(BasePage):
                     elem_classes=["no-background", "body-text-color"],
                 )
                 self.cb_is_public = gr.Checkbox(
-                    value=False, label="Shared", min_width=10, scale=4
+                    value=False, label="Shared", min_width=10, scale=4,visible=False
                 )
 
             with gr.Row(visible=False) as self._delete_confirm:

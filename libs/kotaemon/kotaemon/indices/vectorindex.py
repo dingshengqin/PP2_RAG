@@ -235,6 +235,8 @@ class VectorRetrieval(BaseRetrieval):
             print(f"Got {len(vs_docs)} from vectorstore")
             print(f"Got {len(ds_docs)} from docstore")
 
+        # return result
+
         # use additional reranker to re-order the document list
         if self.rerankers and text:
             for reranker in self.rerankers:

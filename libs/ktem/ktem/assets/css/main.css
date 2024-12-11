@@ -94,6 +94,8 @@ button.selected {
 #user-chat-bot {
   background: var(--background-fill-primary);
   flex: auto;
+  max-height: 660px; /* 设置最大高度 */
+  min-height: 650px;  /* 设置最小高度 */
 }
 
 
