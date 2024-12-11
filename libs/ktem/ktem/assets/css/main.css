@@ -65,7 +65,6 @@ button.selected {
 #indices-tab,
 #settings-tab,
 #help-tab,
-#resources-tab,
 #login-tab {
   border: none !important;
 }
@@ -83,6 +82,7 @@ button.selected {
   border: none !important;
   max-width: max(70vw, 1200px) !important;
   margin: 0 auto !important;
+  
 }
 
 #main-chat-bot {
@@ -130,7 +130,9 @@ button.selected {
   max-height: var(--main-area-height) !important;
   flex-wrap: unset;
   overflow-y: scroll !important;
-  position: sticky;
+  /* position: sticky; */
+  position: relative; /* 确保下拉框的定位 */
+  z-index: 10; /* 设置 z-index 确保在其它元素之上 */
 }
 
 

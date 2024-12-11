@@ -254,7 +254,7 @@ class ChatbotPage(BasePage):
                             setattr(self, f"_index_{index.id}", index_ui)
 
                 if index.name == "GraphRAG":
-                    with gr.Column(scale=3,elem_id="Collection setting ") as self.conv_Column:
+                    with gr.Column(scale=3,elem_id="Collection setting ",visible=False) as self.conv_Column:
 
                         with gr.Accordion(
                             label=f"{index.name} Collection" + (" - not available now" if index.name == "GraphRAG" else ""),
@@ -277,8 +277,26 @@ class ChatbotPage(BasePage):
                                     index.default_selector = index_ui.default()
                                     self._indices_input.append(gr_index)
                             setattr(self, f"_index_{index.id}", index_ui)
+
+
+            # 添加图片 logo
             with gr.Column(scale=3,):
-                with gr.Accordion(label="Chat settings(only ollama available now)", open=False):
+                gr.Image(
+                    value="https://i.ibb.co/HN2W3tT/logo-new.png",
+                    elem_id="logo",
+                    show_label=False,
+                    height=40,  # 根据需要调整高度
+                    width=75,   # 根据需要调整宽度
+                    show_download_button=False,
+                )
+            with gr.Column(scale=3,):
+                    gr.Markdown(
+                        "<span style='color: white; font-weight: bold; font-size: 15px;'>"
+                        "Contactor:bin.jiang@volkswagen-anhui.com<br>"
+                        "</span>"
+                    )
+            with gr.Column(scale=3,visible=False):
+                with gr.Accordion(label="Chat settings(only ollama available now)", open=False,visible=False):
                     # a quick switch for reasoning type option
                     with gr.Row():
                         gr.HTML("Reasoning method")
@@ -1004,7 +1022,7 @@ class ChatbotPage(BasePage):
 
         text, refs, plot, plot_gr = "", "", None, gr.update(visible=False)
         msg_placeholder = getattr(
-            flowsettings, "KH_CHAT_MSG_PLACEHOLDER", "Thinking ..."
+            flowsettings, "KH_CHAT_MSG_PLACEHOLDER", "Thinking ... First commit will need a moment,"
         )
         print(msg_placeholder)
         yield (
