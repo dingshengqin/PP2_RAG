@@ -1168,7 +1168,6 @@ class FileIndexPage(BasePage):
             current_group = session.query(FileGroup).filter_by(name=group_name).first()
 
             if not current_group:
-                print("not current_group")
                 current_group = FileGroup(
                     name=group_name,
                     data={"files": group_files},  # type: ignore
@@ -1178,7 +1177,6 @@ class FileIndexPage(BasePage):
                 session.commit()
             else:
                 # update current group with new info
-                print("is current_group")
                 current_group.name = group_name
                 current_group.data["files"] = group_files  # Update the files
                 session.commit()
@@ -1270,9 +1268,9 @@ class FileSelector(BasePage):
 
     def default(self):
         if self._app.f_user_management:
-            return "all", [], -1
-        return "all", [], 1
-        
+            return "disabled", [], -1
+        return "disabled", [], 1
+
     def on_building_ui(self):
         default_mode, default_selector, user_id = self.default()
 
@@ -1311,9 +1309,9 @@ class FileSelector(BasePage):
         if user_id is None:
             return []
 
-        # if mode == "disabled":
-        #     return []
-        if mode == "none":  # 检查是否选择了“不选择任何文档”
+        if mode == "disabled":
+            return []
+        elif mode == "none":  # 检查是否选择了“不选择任何文档”
             return []  # 返回空列表表示不选择任何文档
         elif mode == "select":
             return selected
