@@ -98,6 +98,8 @@ class TeiFastReranking(BaseReranking):
             _docs = [d.content for d in mini_batch]
             _docs = self.split_docs(_docs)
 
+            _docs = _docs[:32]
+
             # 检查 _docs 里每个元素的长度
             for i, doc in enumerate(_docs):
                 print(f"Document {i} length: {len(doc)}")
